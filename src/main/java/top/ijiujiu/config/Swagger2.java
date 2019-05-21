@@ -1,4 +1,4 @@
-package top.ijiujiu;
+package top.ijiujiu.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

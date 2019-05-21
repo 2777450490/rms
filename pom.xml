@@ -51,11 +51,11 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- 添加druid依赖 -->
-		<!--<dependency>-->
-			<!--<groupId>com.alibaba</groupId>-->
-			<!--<artifactId>druid-spring-boot-starter</artifactId>-->
-			<!--<version>${druid.version}</version>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
 		<!--swagger2-->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -103,6 +103,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

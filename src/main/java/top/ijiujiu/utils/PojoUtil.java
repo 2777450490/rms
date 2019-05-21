@@ -23,16 +23,9 @@ public class PojoUtil {
         if(ObjectUtils.isEmpty(session)){
             return;
         }
-//        String userId = UserSession.getSessionUserId(session);
         Map<String, Object> data = ThreadSession.getHttpData();
-        String userIp = "127.0.0.1";
-        String userName = "";
-        if (!StringUtils.isEmpty(UserSession.getSessionUserName(session))){
-            userName = UserSession.getSessionUserName(session);
-        }
-        if (!ObjectUtils.isEmpty(data.get("remoteIp"))){
-            userIp = data.get("remoteIp").toString();
-        }
+        String userIp = ObjectUtils.isEmpty(data.get("remoteIp")) ? "127.0.0.1" : data.get("remoteIp").toString();
+        String userName = StringUtils.isEmpty(UserSession.getSessionUserName(session)) ? "" : UserSession.getSessionUserName(session);
         switch (operationType.getStatus()) {
             case 1:
                 beanBase.setCreatedBy(userName);

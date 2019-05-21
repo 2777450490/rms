@@ -7,8 +7,9 @@ package top.ijiujiu.utils;
  */
 public class ResultUtil<T> {
 
-    private static final int SUCCESS = 1;
-    private static final int FAILED = 2;
+    private static final int SUCCESS = 200;
+    private static final int FAILED = 401;
+    private static final int NO_AUTH = 403;
     private Integer status;
     private String message;
     private T t = null;
@@ -50,5 +51,18 @@ public class ResultUtil<T> {
         this.message = message;
         return this;
     }
+
+    public ResultUtil<T> noAuth(){
+        this.status = NO_AUTH;
+        this.message = "没有权限!";
+        return this;
+    }
+
+    public ResultUtil<T> noAuth(String message){
+        this.status = NO_AUTH;
+        this.message = message;
+        return this;
+    }
+
 
 }

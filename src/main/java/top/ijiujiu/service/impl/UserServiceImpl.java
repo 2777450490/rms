@@ -5,11 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import top.ijiujiu.entity.User;
 import top.ijiujiu.repository.UserRepository;
 import top.ijiujiu.service.IUserService;
+import top.ijiujiu.utils.EncryptUtil;
 import top.ijiujiu.utils.OperationTypeEnum;
 import top.ijiujiu.utils.PojoUtil;
 import javax.persistence.criteria.Predicate;
@@ -17,17 +20,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional(value="transactionManager", rollbackFor = Exception.class)
+//@Transactional(value="transactionManager", rollbackFor = Exception.class)
 public class UserServiceImpl implements IUserService {
+
     private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
+    public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
+        logger.info("入参为:{}",loginName);
+        User user = this.userRepository.findByLoginName(loginName);
+        if (ObjectUtils.isEmpty(user)){
+            throw new UsernameNotFoundException("找不到指定的用户信息!");
+        }
+        return user;
+    }
+
+    @Override
     public User findById(String id) {
         logger.info("入参为:{}",id);
         return this.userRepository.findById(id).get();
+    }
+
+    @Override
+    public User findByLoginName(String loginName) {
+        return this.userRepository.findByLoginName(loginName);
     }
 
     @Override
@@ -38,6 +57,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User add(User user) {
         logger.info("入参为:{}",user);
+        user.setPwd(EncryptUtil.encrypt(user.getPwd()));
         PojoUtil.setSysProperties(user, OperationTypeEnum.INSERT);
         logger.info("setSysPropertie后为:{}",user);
         return this.userRepository.save(user);
@@ -63,6 +83,7 @@ public class UserServiceImpl implements IUserService {
             throw new RuntimeException("删除user未找到!");
         }
     }
+
     @Override
     public Boolean delByIds(String[] ids) {
         for (String id:ids){
@@ -86,4 +107,5 @@ public class UserServiceImpl implements IUserService {
     public Page<User> findByPage(Integer page, Integer size, User user) {
         return null;
     }
+
 }
