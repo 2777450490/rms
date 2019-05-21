@@ -1,7 +1,9 @@
 package top.ijiujiu.utils;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -10,64 +12,61 @@ import java.io.Serializable;
  * @param <T>
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResultUtil<T> implements Serializable{
 
-    private static final int SUCCESS = 200;
-    private static final int FAILED = 401;
-    private static final int NO_AUTH = 403;
     private Integer status;
     private String message;
     private T data = null;
 
     public ResultUtil<T> success(){
-        this.status = SUCCESS;
-        this.message = "操作成功!";
+        this.status = SystemStatusEnum.SUCCESS.getStatus();
+        this.message = SystemStatusEnum.SUCCESS.getMessage();
         return this;
     }
 
     public ResultUtil<T> success(String message){
-        this.status = SUCCESS;
+        this.status = SystemStatusEnum.SUCCESS.getStatus();
         this.message = message;
         return this;
     }
 
     public ResultUtil<T> success(T t){
-        this.status = SUCCESS;
-        this.message = "操作成功!";
+        this.status = SystemStatusEnum.SUCCESS.getStatus();
+        this.message = SystemStatusEnum.SUCCESS.getMessage();
         this.data = t;
         return this;
     }
 
     public ResultUtil<T> success(String message,T t){
-        this.status = SUCCESS;
+        this.status = SystemStatusEnum.SUCCESS.getStatus();
         this.message = message;
         this.data = t;
         return this;
     }
 
     public ResultUtil<T> failed(){
-        this.status = FAILED;
-        this.message = "操作失败!";
+        this.status = SystemStatusEnum.FAILED.getStatus();
+        this.message = SystemStatusEnum.FAILED.getMessage();
         return this;
     }
 
     public ResultUtil<T> failed(String message){
-        this.status = FAILED;
+        this.status = SystemStatusEnum.FAILED.getStatus();
         this.message = message;
         return this;
     }
 
     public ResultUtil<T> noAuth(){
-        this.status = NO_AUTH;
-        this.message = "没有权限!";
+        this.status = SystemStatusEnum.NO_AUTH.getStatus();
+        this.message = SystemStatusEnum.NO_AUTH.getMessage();
         return this;
     }
 
     public ResultUtil<T> noAuth(String message){
-        this.status = NO_AUTH;
+        this.status = SystemStatusEnum.NO_AUTH.getStatus();
         this.message = message;
         return this;
     }
-
-
 }

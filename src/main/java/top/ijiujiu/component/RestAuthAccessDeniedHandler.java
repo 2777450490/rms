@@ -35,6 +35,6 @@ public class RestAuthAccessDeniedHandler implements AccessDeniedHandler {
         ResultUtil<User> result = new ResultUtil<>();
         result.noAuth(e.getMessage());
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(request));
+        response.getWriter().write(objectMapper.writeValueAsString(result));
     }
 }

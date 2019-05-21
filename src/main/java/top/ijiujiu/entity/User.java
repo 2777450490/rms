@@ -119,6 +119,9 @@ public class User extends BeanBase implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
+        if (status != 1){
+            return false;
+        }
         return true;
     }
 
@@ -129,6 +132,9 @@ public class User extends BeanBase implements UserDetails{
 
     @Override
     public boolean isEnabled() {
+        if(isDelete != 0){
+            return false;
+        }
         return true;
     }
 }

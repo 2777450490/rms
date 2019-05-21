@@ -37,6 +37,6 @@ public class FuryAuthFailureHandler implements AuthenticationFailureHandler {
         ResultUtil<User> result = new ResultUtil<>();
         result.failed(exception.getMessage());
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(request));
+        response.getWriter().write(objectMapper.writeValueAsString(result));
     }
 }

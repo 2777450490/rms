@@ -4,9 +4,12 @@ package top.ijiujiu.utils;
  * 系统状态枚举
  */
 public enum SystemStatusEnum {
-	ENABLED(1, "启用"),
-	DISABLED(2, "禁用"),
-	SYSTEM_EXCEPTION(3,"系统异常");
+	ENABLED(1, "启用!"),
+	DISABLED(2, "禁用!"),
+	SYSTEM_EXCEPTION(3,"系统异常!"),
+	SUCCESS(200,"操作成功!"),
+	FAILED(401,"操作失败!"),
+	NO_AUTH(403,"没有权限!");
 
 	private int status;
 	private String message;
