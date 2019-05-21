@@ -1,6 +1,8 @@
 package top.ijiujiu.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -21,12 +23,15 @@ import java.io.IOException;
 @Component
 public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(MyLogoutSuccessHandler.class);
+
     /**Json转化工具*/
     @Autowired
     private ObjectMapper objectMapper;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException{
+        logger.info("登出成功");
         ResultUtil<User> result = new ResultUtil<>();
         result.success("登出成功");
         response.setContentType("application/json;charset=UTF-8");

@@ -1,18 +1,23 @@
 package top.ijiujiu.utils;
 
 
+import lombok.Data;
+
+import java.io.Serializable;
+
 /**
  *  响应客户端对象封装
  * @param <T>
  */
-public class ResultUtil<T> {
+@Data
+public class ResultUtil<T> implements Serializable{
 
     private static final int SUCCESS = 200;
     private static final int FAILED = 401;
     private static final int NO_AUTH = 403;
     private Integer status;
     private String message;
-    private T t = null;
+    private T data = null;
 
     public ResultUtil<T> success(){
         this.status = SUCCESS;
@@ -29,14 +34,14 @@ public class ResultUtil<T> {
     public ResultUtil<T> success(T t){
         this.status = SUCCESS;
         this.message = "操作成功!";
-        this.t = t;
+        this.data = t;
         return this;
     }
 
     public ResultUtil<T> success(String message,T t){
         this.status = SUCCESS;
         this.message = message;
-        this.t = t;
+        this.data = t;
         return this;
     }
 

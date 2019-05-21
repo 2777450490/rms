@@ -1,6 +1,8 @@
 package top.ijiujiu.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -22,12 +24,14 @@ import java.io.IOException;
 @Component
 public class RestAuthAccessDeniedHandler implements AccessDeniedHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(MyLogoutSuccessHandler.class);
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
+        logger.error("用户没有权限");
         ResultUtil<User> result = new ResultUtil<>();
         result.noAuth(e.getMessage());
         response.setContentType("application/json;charset=UTF-8");

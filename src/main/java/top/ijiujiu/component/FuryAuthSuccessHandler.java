@@ -1,6 +1,8 @@
 package top.ijiujiu.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -21,6 +23,8 @@ import java.io.IOException;
 @Component
 public class FuryAuthSuccessHandler implements AuthenticationSuccessHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(FuryAuthSuccessHandler.class);
+
     /**Json转化工具*/
     @Autowired
     private ObjectMapper objectMapper;
@@ -28,7 +32,7 @@ public class FuryAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
-        System.out.println("管理员 " + user.getUsername() + " 登录");
+        logger.info("登录用户为:{}",user.getUsername());
         ResultUtil<User> result = new ResultUtil<>();
         result.success("登录成功",user);
         response.setContentType("application/json;charset=UTF-8");

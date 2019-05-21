@@ -1,6 +1,8 @@
 package top.ijiujiu.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -22,6 +24,8 @@ import java.io.IOException;
 @Component
 public class FuryAuthFailureHandler implements AuthenticationFailureHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(FuryAuthFailureHandler.class);
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -29,7 +33,7 @@ public class FuryAuthFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        System.out.println("登录验证失败");
+        logger.error("登录验证失败");
         ResultUtil<User> result = new ResultUtil<>();
         result.failed(exception.getMessage());
         response.setContentType("application/json;charset=UTF-8");
