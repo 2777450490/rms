@@ -9,7 +9,8 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import top.ijiujiu.entity.Resource;
 import top.ijiujiu.entity.Role;
 import top.ijiujiu.service.IResourceService;
@@ -34,29 +35,35 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     @Autowired
     private IResourceService resourceService;
 
+
+    AntPathMatcher antPathMatcher = new AntPathMatcher();
+
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
-        // 得到用户的请求地址
+        // FIXME: 2019/5/22 得到用户的请求地址 URL地址待处理
         String requestUrl = ((FilterInvocation) o).getRequestUrl();
-        // FIXME: 2019/5/22 URL地址待处理
-        requestUrl = requestUrl.split("\\?")[0];
         LOGGER.info("用户请求的地址是:{}",requestUrl);
-        if (uncurbedProperties.getUrl().equals(requestUrl)) {// 如果登录页面就不需要权限
+        // 如果是登录页面就不需要权限
+        if (uncurbedProperties.getUrl().equals(requestUrl)) {
             return null;
         }
-        Resource resource = resourceService.getResourceByUrl(requestUrl);
-        if(ObjectUtils.isEmpty(resource)) { //如果没有匹配的url则说明大家都可以访问
-            return SecurityConfig.createList(uncurbedProperties.getRole());
+        List<Resource> resources = resourceService.findAll();
+        for (Resource menu : resources) {
+            if (antPathMatcher.match(menu.getResourceUrl(), requestUrl)) {
+                // 强制加载懒加载数据
+                Hibernate.initialize(menu.getRoles());
+                List<Role> roles = menu.getRoles();
+                int size = roles.size();
+                String[] values = new String[size];
+                for (int i = 0; i < size; i++) {
+                    values[i] = roles.get(i).getId();
+                }
+                LOGGER.info("用户所拥有的角色ID:{}",StringUtils.arrayToCommaDelimitedString(values));
+                return SecurityConfig.createList(values);
+            }
         }
-        //将resource所需要到的roles按框架要求封装返回（ResourceService里面的getRoles方法是基于RoleRepository实现的）
-        Hibernate.initialize(resource.getRoles());
-        List<Role> roles = resource.getRoles();
-        int size = roles.size();
-        String[] values = new String[size];
-        for (int i = 0; i < size; i++) {
-            values[i] = roles.get(i).getId();
-        }
-        return SecurityConfig.createList(values);
+        //没有匹配上的资源，都是登录访问
+        return SecurityConfig.createList(uncurbedProperties.getRole());
     }
 
     @Override
@@ -66,6 +73,6 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return false;
+        return FilterInvocation.class.isAssignableFrom(aClass);
     }
 }

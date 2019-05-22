@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Data
 @Entity
+@Where(clause="is_delete<>1")
 public class Resource extends BeanBase {
 
     /**

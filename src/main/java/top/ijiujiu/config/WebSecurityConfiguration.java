@@ -99,7 +99,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/images/**")
                 .antMatchers("/scripts/**")
-                .antMatchers("/styles/**");
+                .antMatchers("/styles/**")
+                .antMatchers("/v2/**")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/webjars/**");
     }
 
 

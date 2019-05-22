@@ -1,6 +1,7 @@
 package top.ijiujiu.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -108,16 +109,20 @@ public class User extends BeanBase implements UserDetails{
         return authorities;
     }
 
+
+    @JsonIgnore
     @Override
     public String getPassword() {
         return pwd;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return loginName;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -131,6 +136,7 @@ public class User extends BeanBase implements UserDetails{
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
