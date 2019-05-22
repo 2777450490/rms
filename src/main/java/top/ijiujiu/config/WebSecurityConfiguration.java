@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -64,18 +65,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors() //开启跨域
                 .and().csrf().disable() // 取消跨站请求伪造防护
                 .authorizeRequests()
-                // 下面配置不需要拦截的路径
-                .antMatchers("/login").permitAll()
-                .antMatchers("/logout").permitAll()
-                .antMatchers("/images/**").permitAll()
-                .antMatchers("/scripts/**").permitAll()
-                .antMatchers("/styles/**").permitAll()
-                .anyRequest() // 任何请求
-                .authenticated() // 都需要身份认证
-                .and().formLogin()
-                .loginProcessingUrl("/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
@@ -84,7 +73,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         return o;
                     }
                 })
-                .and().logout().logoutUrl("/logout")
+                .anyRequest() // 任何请求
+                .authenticated() // 都需要身份认证
+                .and().formLogin()
+                .loginProcessingUrl("/login").permitAll()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .and().logout().logoutUrl("/logout").permitAll()
                 .logoutSuccessHandler(logoutSuccessHandler)
                 .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
@@ -92,6 +87,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    /**
+     * 配置不需要拦截的url
+     * @param web
+     * @throws Exception
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/images/**")
+                .antMatchers("/scripts/**")
+                .antMatchers("/styles/**");
     }
 
 

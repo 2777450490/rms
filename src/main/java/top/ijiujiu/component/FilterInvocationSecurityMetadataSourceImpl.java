@@ -38,6 +38,8 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         // 得到用户的请求地址
         String requestUrl = ((FilterInvocation) o).getRequestUrl();
+        // FIXME: 2019/5/22 URL地址待处理
+        requestUrl = requestUrl.split("\\?")[0];
         LOGGER.info("用户请求的地址是:{}",requestUrl);
         if (uncurbedProperties.getUrl().equals(requestUrl)) {// 如果登录页面就不需要权限
             return null;
