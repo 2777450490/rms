@@ -22,9 +22,9 @@ import java.io.IOException;
  * 创建时间: 2019/05/20 17:42
  */
 @Component
-public class FuryAuthFailureHandler implements AuthenticationFailureHandler {
+public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(FuryAuthFailureHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AuthenticationFailureHandlerImpl.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -33,7 +33,7 @@ public class FuryAuthFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        logger.error("登录验证失败");
+        LOGGER.error("登录验证失败");
         ResultUtil<User> result = new ResultUtil<>();
         result.failed(exception.getMessage());
         response.setContentType("application/json;charset=UTF-8");

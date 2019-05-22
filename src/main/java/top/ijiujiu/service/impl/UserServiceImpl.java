@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import top.ijiujiu.entity.User;
 import top.ijiujiu.repository.UserRepository;
+import top.ijiujiu.service.IBeanBaseService;
 import top.ijiujiu.service.IUserService;
 import top.ijiujiu.utils.EncryptUtil;
 import top.ijiujiu.utils.OperationTypeEnum;
@@ -23,14 +24,14 @@ import java.util.List;
 //@Transactional(value="transactionManager", rollbackFor = Exception.class)
 public class UserServiceImpl implements IUserService {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
-        logger.info("入参为:{}",loginName);
+        LOGGER.info("入参为:{}",loginName);
         User user = this.userRepository.findByLoginName(loginName);
         if (ObjectUtils.isEmpty(user)){
             throw new UsernameNotFoundException("找不到指定的用户信息!");
@@ -40,13 +41,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User findById(String id) {
-        logger.info("入参为:{}",id);
+        LOGGER.info("入参为:{}",id);
         return this.userRepository.findById(id).get();
-    }
-
-    @Override
-    public User findByLoginName(String loginName) {
-        return this.userRepository.findByLoginName(loginName);
     }
 
     @Override
@@ -56,31 +52,31 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User add(User user) {
-        logger.info("入参为:{}",user);
+        LOGGER.info("入参为:{}",user);
         user.setPwd(EncryptUtil.encrypt(user.getPwd()));
         PojoUtil.setSysProperties(user, OperationTypeEnum.INSERT);
-        logger.info("setSysPropertie后为:{}",user);
+        LOGGER.info("setSysPropertie后为:{}",user);
         return this.userRepository.save(user);
     }
 
     @Override
     public User update(User user) {
-        logger.info("入参为:{}",user);
+        LOGGER.info("入参为:{}",user);
         PojoUtil.setSysProperties(user, OperationTypeEnum.UPDATE);
-        logger.info("setSysPropertie后为:{}",user);
+        LOGGER.info("setSysPropertie后为:{}",user);
         return this.userRepository.save(user);
     }
 
     @Override
     public Boolean delById(String id) {
-        logger.info("入参为:{}",id);
+        LOGGER.info("入参为:{}",id);
         User user = findById(id);
         try {
             PojoUtil.setSysProperties(user, OperationTypeEnum.DELETE);
             this.userRepository.save(user);
             return true;
         }catch (Exception e){
-            throw new RuntimeException("删除user未找到!");
+            throw new RuntimeException("未找到删除对象!");
         }
     }
 
@@ -108,4 +104,8 @@ public class UserServiceImpl implements IUserService {
         return null;
     }
 
+    @Override
+    public User findByLoginName(String loginName) {
+        return this.userRepository.findByLoginName(loginName);
+    }
 }

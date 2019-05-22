@@ -21,9 +21,9 @@ import java.io.IOException;
  * 创建时间: 2019/05/20 17:32
  */
 @Component
-public class FuryAuthSuccessHandler implements AuthenticationSuccessHandler {
+public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(FuryAuthSuccessHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AuthenticationSuccessHandlerImpl.class);
 
     /**Json转化工具*/
     @Autowired
@@ -32,7 +32,7 @@ public class FuryAuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
-        logger.info("登录用户为:{}",user.getUsername());
+        LOGGER.info("登录用户为:{}",user.getUsername());
         ResultUtil<User> result = new ResultUtil<>();
         result.success("登录成功",user);
         response.setContentType("application/json;charset=UTF-8");

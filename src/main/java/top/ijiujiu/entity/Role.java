@@ -44,7 +44,7 @@ public class Role extends BeanBase {
     /**
      * 和资源多对多
      */
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinTable(name="role_resource",
             joinColumns= {@JoinColumn(name="role_id",referencedColumnName="id")},
             inverseJoinColumns= {@JoinColumn(name="resource_id",referencedColumnName="id")})
