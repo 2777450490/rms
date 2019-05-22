@@ -17,7 +17,7 @@ import java.util.Date;
  * 创建时间: 2019/05/20 15:29
  */
 @Component
-public class InitUser implements ApplicationRunner {
+public class InitUserComponent implements ApplicationRunner {
 
     @Autowired
     private IUserService userService;
