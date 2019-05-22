@@ -5,16 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import top.ijiujiu.entity.User;
+import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.repository.UserRepository;
 import top.ijiujiu.service.IUserService;
 import top.ijiujiu.utils.EncryptUtil;
-import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.utils.PojoUtil;
+
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +26,6 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
-        LOGGER.info("入参为:{}",loginName);
-        User user = this.userRepository.findByLoginName(loginName);
-        if (ObjectUtils.isEmpty(user)){
-            throw new UsernameNotFoundException("找不到指定的用户信息!");
-        }
-        return user;
-    }
 
     @Override
     public User findById(String id) {
