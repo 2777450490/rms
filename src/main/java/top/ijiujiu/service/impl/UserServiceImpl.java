@@ -43,7 +43,6 @@ public class UserServiceImpl implements IUserService {
         LOGGER.info("入参为:{}",user);
         user.setPwd(EncryptUtil.encrypt(user.getPwd()));
         PojoUtil.setSysProperties(user, OperationTypeEnum.INSERT);
-        LOGGER.info("setSysPropertie后为:{}",user);
         return this.userRepository.save(user);
     }
 
@@ -51,7 +50,6 @@ public class UserServiceImpl implements IUserService {
     public User update(User user) {
         LOGGER.info("入参为:{}",user);
         PojoUtil.setSysProperties(user, OperationTypeEnum.UPDATE);
-        LOGGER.info("setSysPropertie后为:{}",user);
         return this.userRepository.save(user);
     }
 
@@ -78,6 +76,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Page<User> findByPage(Integer page, Integer size) {
+        LOGGER.info("入参为:{}",page,size);
         PageRequest pageRequest = PageRequest.of(page,size);
         return this.userRepository.findAll((root,query,criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

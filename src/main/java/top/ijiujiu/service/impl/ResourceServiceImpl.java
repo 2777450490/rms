@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import top.ijiujiu.entity.Resource;
+import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.repository.ResourceRepository;
 import top.ijiujiu.service.IResourceService;
-import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.utils.PojoUtil;
 
 import javax.persistence.criteria.Predicate;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class ResourceServiceImpl implements IResourceService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     @Autowired
     private ResourceRepository resourceRepository;
@@ -45,7 +45,6 @@ public class ResourceServiceImpl implements IResourceService {
     public Resource add(Resource resource) {
         LOGGER.info("入参为:{}",resource);
         PojoUtil.setSysProperties(resource, OperationTypeEnum.INSERT);
-        LOGGER.info("setSysPropertie后为:{}",resource);
         return this.resourceRepository.save(resource);
     }
 
@@ -53,7 +52,6 @@ public class ResourceServiceImpl implements IResourceService {
     public Resource update(Resource resource) {
         LOGGER.info("入参为:{}",resource);
         PojoUtil.setSysProperties(resource, OperationTypeEnum.UPDATE);
-        LOGGER.info("setSysPropertie后为:{}",resource);
         return this.resourceRepository.save(resource);
     }
 
@@ -97,8 +95,4 @@ public class ResourceServiceImpl implements IResourceService {
         return null;
     }
 
-    @Override
-    public Resource getResourceByUrl(String resourceUrl) {
-        return this.resourceRepository.findByResourceUrlAndIsDelete(resourceUrl,0);
-    }
 }

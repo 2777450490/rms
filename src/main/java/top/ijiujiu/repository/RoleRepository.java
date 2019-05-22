@@ -2,8 +2,8 @@ package top.ijiujiu.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import top.ijiujiu.entity.Resource;
+import top.ijiujiu.entity.Role;
 
-public interface ResourceRepository extends JpaRepository<Resource,String>,JpaSpecificationExecutor<Resource> {
+public interface RoleRepository extends JpaRepository<Role,String>,JpaSpecificationExecutor<Role> {
 
 }

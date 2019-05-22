@@ -10,5 +10,4 @@ import top.ijiujiu.entity.Resource;
  */
 public interface IResourceService extends IBeanBaseService<Resource>{
 
-    Resource getResourceByUrl(String resourceUrl);
 }
