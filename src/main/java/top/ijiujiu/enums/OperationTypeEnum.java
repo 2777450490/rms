@@ -1,4 +1,4 @@
-package top.ijiujiu.utils;
+package top.ijiujiu.enums;
 
 public enum OperationTypeEnum {
     INSERT(1,"新增"),

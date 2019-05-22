@@ -1,4 +1,4 @@
-package top.ijiujiu.utils;
+package top.ijiujiu.enums;
 
 /**
  * 系统状态枚举

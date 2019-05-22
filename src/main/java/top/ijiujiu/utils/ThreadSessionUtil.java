@@ -4,7 +4,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ThreadSession {
+public class ThreadSessionUtil {
 
 	private static ThreadLocal _session = new ThreadLocal();
 

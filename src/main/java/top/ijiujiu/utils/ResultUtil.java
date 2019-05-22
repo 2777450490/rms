@@ -4,6 +4,7 @@ package top.ijiujiu.utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.ijiujiu.enums.SystemStatusEnum;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@ package top.ijiujiu.utils;
 
 import javax.servlet.http.HttpSession;
 
-public class UserSession {
+public class UserSessionUtil {
     private static final String SESSION_KEY = "LOGIN_USER";
     private static final String SESSION_KEY_USERNAME = "LOGIN_USER_NAME";
 

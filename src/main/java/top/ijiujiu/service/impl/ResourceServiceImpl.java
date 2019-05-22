@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import top.ijiujiu.entity.Resource;
 import top.ijiujiu.repository.ResourceRepository;
 import top.ijiujiu.service.IResourceService;
-import top.ijiujiu.utils.OperationTypeEnum;
+import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.utils.PojoUtil;
 
 import javax.persistence.criteria.Predicate;

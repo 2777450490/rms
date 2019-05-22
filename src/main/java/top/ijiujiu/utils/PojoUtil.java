@@ -5,6 +5,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import top.ijiujiu.entity.BeanBase;
+import top.ijiujiu.enums.OperationTypeEnum;
+import top.ijiujiu.enums.SystemStatusEnum;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -19,13 +21,13 @@ public class PojoUtil {
     @SuppressWarnings("deprecation")
     public static void setSysProperties(BeanBase beanBase, OperationTypeEnum operationType) {
         Assert.notNull(beanBase);
-        HttpSession session = ThreadSession.getHttpSession();
+        HttpSession session = ThreadSessionUtil.getHttpSession();
         if(ObjectUtils.isEmpty(session)){
             return;
         }
-        Map<String, Object> data = ThreadSession.getHttpData();
+        Map<String, Object> data = ThreadSessionUtil.getHttpData();
         String userIp = ObjectUtils.isEmpty(data.get("remoteIp")) ? "127.0.0.1" : data.get("remoteIp").toString();
-        String userName = StringUtils.isEmpty(UserSession.getSessionUserName(session)) ? "" : UserSession.getSessionUserName(session);
+        String userName = StringUtils.isEmpty(UserSessionUtil.getSessionUserName(session)) ? "" : UserSessionUtil.getSessionUserName(session);
         switch (operationType.getStatus()) {
             case 1:
                 beanBase.setCreatedBy(userName);
