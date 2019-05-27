@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.ijiujiu.entity.User;
 import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.repository.UserRepository;
@@ -68,6 +70,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean delByIds(String[] ids) {
+        LOGGER.info("入参为:{}", StringUtils.arrayToCommaDelimitedString(ids));
         for (String id:ids){
             delById(id);
         }
@@ -80,7 +83,7 @@ public class UserServiceImpl implements IUserService {
         PageRequest pageRequest = PageRequest.of(page,size);
         return this.userRepository.findAll((root,query,criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.equal(root.get("isDelete"), 0));
+            predicates.add(criteriaBuilder.notEqual(root.get("isDelete"), 1));
             Predicate finalPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
             return finalPredicate;
         }, pageRequest);
@@ -88,11 +91,27 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Page<User> findByPage(Integer page, Integer size, User user) {
-        return null;
+        LOGGER.info("入参为:{}",page,size,user);
+        PageRequest pageRequest = PageRequest.of(page,size);
+        return this.userRepository.findAll((root,query,criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.notEqual(root.get("isDelete"), 1));
+            if (!ObjectUtils.isEmpty(user)){
+                if (!StringUtils.isEmpty(user.getName())){
+                    predicates.add(criteriaBuilder.like(root.get("name"), "%" + user.getName() + "%"));
+                }
+                if (user.getSex() != null){
+                    predicates.add(criteriaBuilder.equal(root.get("sex"), user.getSex()));
+                }
+            }
+            Predicate finalPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+            return finalPredicate;
+        }, pageRequest);
     }
 
     @Override
     public User findByLoginName(String loginName) {
+        LOGGER.info("入参为:{}",loginName);
         return this.userRepository.findByLoginName(loginName);
     }
 }

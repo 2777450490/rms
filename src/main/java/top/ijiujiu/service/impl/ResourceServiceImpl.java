@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.ijiujiu.entity.Resource;
 import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.repository.ResourceRepository;
@@ -70,7 +72,7 @@ public class ResourceServiceImpl implements IResourceService {
 
     @Override
     public Boolean delByIds(String[] ids) {
-        LOGGER.info("入参为:{}",ids.toString());
+        LOGGER.info("入参为:{}", StringUtils.arrayToCommaDelimitedString(ids));
         for (String id:ids){
             delById(id);
         }
@@ -81,18 +83,28 @@ public class ResourceServiceImpl implements IResourceService {
     public Page<Resource> findByPage(Integer page, Integer size) {
         LOGGER.info("入参为:{}",page,size);
         PageRequest pageRequest = PageRequest.of(page,size);
-        return this.resourceRepository.findAll((root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.equal(root.get("isDelete"), 0));
-            Predicate finalPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
-            LOGGER.info("构建条件为:{}", finalPredicate);
-            return finalPredicate;
-        }, pageRequest);
+        return this.resourceRepository.findAll(pageRequest);
     }
 
     @Override
     public Page<Resource> findByPage(Integer page, Integer size, Resource resource) {
-        return null;
+        LOGGER.info("入参为:{}", page, size, resource);
+        PageRequest pageRequest = PageRequest.of(page,size);
+        return this.resourceRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.notEqual(root.get("isDelete"), 1));
+            if (!ObjectUtils.isEmpty(resource)){
+                if (!StringUtils.isEmpty(resource.getResourceName())){
+                    predicates.add(criteriaBuilder.like(root.get("resourceName"), "%" + resource.getResourceName() + "%"));
+                }
+                if (!StringUtils.isEmpty(resource.getResourceType())){
+                    predicates.add(criteriaBuilder.equal(root.get("resourceType"), resource.getResourceType()));
+                }
+            }
+            Predicate finalPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+            return finalPredicate;
+        }, pageRequest);
+
     }
 
 }

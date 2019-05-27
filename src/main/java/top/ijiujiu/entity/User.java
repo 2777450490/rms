@@ -56,7 +56,7 @@ public class User extends BeanBase implements UserDetails{
     /**
      * 身份证号码
      */
-    private Date idCardNo;
+    private String idCardNo;
 
     /**
      * 电话

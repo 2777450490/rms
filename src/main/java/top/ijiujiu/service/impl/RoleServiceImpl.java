@@ -4,13 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import top.ijiujiu.entity.Role;
 import top.ijiujiu.enums.OperationTypeEnum;
 import top.ijiujiu.repository.RoleRepository;
 import top.ijiujiu.service.IRoleService;
 import top.ijiujiu.utils.PojoUtil;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,26 +52,56 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public Role update(Role role) {
-        return null;
+        LOGGER.info("入参为:{}",role);
+        PojoUtil.setSysProperties(role, OperationTypeEnum.UPDATE);
+        return this.roleRepository.save(role);
     }
 
     @Override
     public Boolean delById(String id) {
-        return null;
+        LOGGER.info("入参为:{}",id);
+        Role role = findById(id);
+        try {
+            PojoUtil.setSysProperties(role, OperationTypeEnum.DELETE);
+            this.roleRepository.save(role);
+            return true;
+        }catch (Exception e){
+            throw new RuntimeException("未找到删除对象!");
+        }
     }
 
     @Override
     public Boolean delByIds(String[] ids) {
-        return null;
+        LOGGER.info("入参为:{}", StringUtils.arrayToCommaDelimitedString(ids));
+        for (String id:ids){
+            delById(id);
+        }
+        return true;
     }
 
     @Override
     public Page<Role> findByPage(Integer page, Integer size) {
-        return null;
+        LOGGER.info("入参为:{}",page,size);
+        PageRequest pageRequest = PageRequest.of(page,size);
+        return this.roleRepository.findAll(pageRequest);
     }
 
     @Override
     public Page<Role> findByPage(Integer page, Integer size, Role role) {
-        return null;
+        LOGGER.info("入参为:{}",page,size,role);
+        PageRequest pageRequest = PageRequest.of(page,size);
+        return this.roleRepository.findAll((root,query,criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (!ObjectUtils.isEmpty(role)){
+                if (!StringUtils.isEmpty(role.getRoleName())){
+                    predicates.add(criteriaBuilder.like(root.get("roleName"), "%" + role.getRoleName() + "%"));
+                }
+                if (!StringUtils.isEmpty(role.getRoleCode())){
+                    predicates.add(criteriaBuilder.like(root.get("roleCode"), "%" + role.getRoleCode() + "%"));
+                }
+            }
+            Predicate finalPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+            return finalPredicate;
+        }, pageRequest);
     }
 }

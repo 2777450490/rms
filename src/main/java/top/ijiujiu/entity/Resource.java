@@ -30,12 +30,14 @@ public class Resource extends BeanBase {
     private String resourceUrl;
 
     /**
+     * 资源的类型
+     */
+    private String resourceType;
+
+    /**
      * 排序编号
      */
     private int orderNum;
-
-    /**备注*/
-    private String remark;
 
     /**
      * 和角色多对多
