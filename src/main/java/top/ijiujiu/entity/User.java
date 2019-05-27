@@ -89,13 +89,11 @@ public class User extends BeanBase implements UserDetails{
     private String headPortrait;
 
     /**
-     * 和角色是多对多的关系
+     * 和角色是多对多的关系,此处使用单项一对多实现双向多对多
      */
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
-    @JoinTable(name="user_role",
-            joinColumns= {@JoinColumn(name="user_id",referencedColumnName="id")},
-            inverseJoinColumns= {@JoinColumn(name="role_id",referencedColumnName="id")})
-    @Where(clause="is_delete=0")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT))
+    @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @Where(clause="is_delete<>1")
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Role> roles;
 

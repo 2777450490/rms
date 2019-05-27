@@ -40,8 +40,9 @@ public class Resource extends BeanBase {
     /**
      * 和角色多对多
      */
-    @ManyToMany(mappedBy = "resources",fetch = FetchType.LAZY)
-    @Where(clause="is_delete=0")
+    @JoinColumn(name = "resource_id", foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT))
+    @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @Where(clause="is_delete<>1")
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Role> roles;
 
@@ -49,7 +50,7 @@ public class Resource extends BeanBase {
      * 自关联父对象
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id",foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT))
     @NotFound(action = NotFoundAction.IGNORE)
     private Resource resource;
 

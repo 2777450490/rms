@@ -37,19 +37,19 @@ public class Role extends BeanBase {
     /**
      * 和用户多对多关系
      */
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
-    @Where(clause="is_delete=0")
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT))
+    @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @Where(clause="is_delete<>1")
     @NotFound(action = NotFoundAction.IGNORE)
     private List<User> users;
+
 
     /**
      * 和资源多对多
      */
-    @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
-    @JoinTable(name="role_resource",
-            joinColumns= {@JoinColumn(name="role_id",referencedColumnName="id")},
-            inverseJoinColumns= {@JoinColumn(name="resource_id",referencedColumnName="id")})
-    @Where(clause="is_delete=0")
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT))
+    @OneToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.LAZY)
+    @Where(clause="is_delete<>1")
     @NotFound(action = NotFoundAction.IGNORE)
     private List<Resource> resources;
 
