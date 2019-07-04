@@ -62,26 +62,35 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+//        http.cors() //开启跨域
+//                .and().csrf().disable() // 取消跨站请求伪造防护
+//                .authorizeRequests()
+//                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+//                    @Override
+//                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+//                        o.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
+//                        o.setAccessDecisionManager(accessDecisionManager);
+//                        return o;
+//                    }
+//                })
+//                .anyRequest() // 任何请求
+//                .authenticated() // 都需要身份认证
+//                .and().formLogin()
+//                .loginProcessingUrl("/login").permitAll()
+//                .successHandler(authenticationSuccessHandler)
+//                .failureHandler(authenticationFailureHandler)
+//                .and().logout().logoutUrl("/logout").permitAll()
+//                .logoutSuccessHandler(logoutSuccessHandler)
+//                .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
         http.cors() //开启跨域
                 .and().csrf().disable() // 取消跨站请求伪造防护
                 .authorizeRequests()
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-                    @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
-                        o.setAccessDecisionManager(accessDecisionManager);
-                        return o;
-                    }
-                })
+                .antMatchers("/**").permitAll() // 所有地址都不拦截，开发使用
                 .anyRequest() // 任何请求
                 .authenticated() // 都需要身份认证
                 .and().formLogin()
                 .loginProcessingUrl("/login").permitAll()
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-                .and().logout().logoutUrl("/logout").permitAll()
-                .logoutSuccessHandler(logoutSuccessHandler)
-                .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+                .and().logout().logoutUrl("/logout").permitAll();
     }
 
     @Override
